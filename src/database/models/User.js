@@ -27,6 +27,13 @@ const userSchema = new Schema({
     type: Boolean,
     default: false,
   },
+
+  deviceId: {
+    type: String,
+    unique: true,
+  },
+
+  water: {},
 });
 
 module.exports = mongoose.model("User", userSchema);

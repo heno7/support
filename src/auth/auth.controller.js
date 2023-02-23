@@ -1,20 +1,11 @@
-const UserRegister = require("../../models/UserRegister");
-const User = require("../../models/User");
-const loginValidation = require("../../validations/login.validation");
-const registerValidation = require("../../validations/register.validation");
+const UserRegister = require("../database/models/UserRegister");
+const User = require("../database/models/User");
+const loginValidation = require("./auth.validations");
+const registerValidation = require("../validations/register.validation");
 const bcrypt = require("bcrypt");
 const JWT = require("jsonwebtoken");
 const { ObjectId } = require("mongoose").Types;
-const sendEmail = require("../../email/sendEmail");
-
-// const randomDefaultImages = [
-//   "default-image-1.png",
-//   "default-image-1.png",
-//   "default-image-1.png",
-//   "default-image-1.png",
-//   "default-image-1.png",
-//   "default-image-1.png",
-// ];
+const sendEmail = require("../email/sendEmail");
 
 async function checkSameEmailOrUserName(value) {
   try {
@@ -134,51 +125,18 @@ module.exports = {
       }
       const user = await User.findOne({ email: value.email });
       if (user) {
-        const match = await bcrypt.compare(value.password, user.password);
-        if (match) {
-          const token = JWT.sign(
-            { id: user._id, userName: user.username, admin: user.admin },
-            process.env.JWT_SECRECT
-          );
-          // return res.status(200).json({ token });
-          return res
-            .status(200)
-            .cookie("access_token", token, {
-              signed: true,
-              expires: new Date(Date.now() + 8 * 3600000), // cookie will be removed after 8 hours
-            })
-            .json({ status: 200, message: "Ok" });
-          // .redirect("/home");
-        }
+        // const match = await bcrypt.compare(value.password, user.password);
+        // if (match) {
+        const token = JWT.sign(
+          { id: user._id, userName: user.username, admin: user.admin },
+          process.env.JWT_SECRECT
+        );
+        return res.status(200).json({ token });
+        // }
       }
       res
         .status(400)
         .json({ status: 400, message: "The given user doesn't exist!" });
-    } catch (error) {
-      next(error);
-    }
-  },
-
-  logout: function (req, res, next) {
-    res
-      .status(200)
-      .clearCookie("access_token", {
-        signed: true,
-        expires: new Date(Date.now() + 8 * 3600000), // cookie will be removed after 8 hours
-      })
-      .redirect("/");
-  },
-
-  uploadAvatar: async function (req, res, next) {
-    try {
-      if (req.file) {
-        const user = await User.findById(req.user.id);
-        const url = "/users/avatar/" + req.file.filename;
-        user.avatar = url;
-        await user.save();
-
-        return res.status(200).json({ url });
-      }
     } catch (error) {
       next(error);
     }

@@ -3,14 +3,10 @@ const path = require("path");
 const express = require("express");
 const app = express();
 
-// const indexRoute = require("./routes/index");
-const authRoutes = require("./routes/auth/auth");
-// const homeRouter = require("./routes/home");
-// const worldRouter = require("./routes/world");
+const authRoutes = require("./auth/auth.routes");
+const waterRoutes = require("./water/water.routes");
 
 const cors = require("cors");
-
-const cookieParser = require("cookie-parser");
 
 const compression = require("compression");
 app.use(compression());
@@ -18,45 +14,21 @@ app.use(compression());
 const helmet = require("helmet");
 app.use(helmet({ contentSecurityPolicy: false }));
 
-// const connectDB = require("./database/connect");
+const connectDB = require("./database/connect");
 
-// connectDB();
+connectDB();
+
+const initMQQT = require("./mqqt");
+initMQQT();
 
 app.use(cors());
-app.use(cookieParser(process.env.COOKIE_SECRECT));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.use("/api/auth", authRoutes);
 
-app.use("/static", express.static(path.join(__dirname, "public")));
-app.use(
-  "/images",
-  express.static(path.join(process.cwd(), "review_images_store"))
-);
-app.use(
-  "/users/avatar",
-  express.static(path.join(process.cwd(), "avatar_images_store"))
-);
-
-// app.use("/", indexRoute);
-
-app.use("/users/auth", authRoutes);
-
-app.get("/", (req, res) => {
-  // return res.redirect("/users/auth/login");
-  return res.render("home.ejs");
-});
-
-// app.use("/home", homeRouter.home);
-// app.use("/home/reviews", homeRouter.reviews);
-// app.use("/home/discussions", homeRouter.discussions);
-
-// app.use("/world", worldRouter.world);
-// app.use("/world/reviews", worldRouter.reviews);
-// app.use("/world/discussions", worldRouter.discussions);
+app.use("/api/water", waterRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
