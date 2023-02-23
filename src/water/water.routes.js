@@ -11,14 +11,15 @@ router.get("/", authMiddleware.checkUser, async function (req, res, next) {
   const hourEnd = req.query.h_end;
   const startTime = new Date(year, month, date, hourStart).getTime();
   const endTime = new Date(year, month, date, hourEnd).getTime();
-
+  console.log(startTime);
+  console.log(endTime);
   const waterListData = req.user.water[`${year}_${month}_${date}`];
 
   if (!waterListData) return res.status(400).json({ message: "Invalid Time" });
   let timeKeyResult;
   for (let key in waterListData) {
     const timeKey = parseInt(key);
-
+    console.log(timeKey);
     if (startTime <= timeKey && timeKey <= endTime) {
       timeKeyResult = timeKey;
       break;
