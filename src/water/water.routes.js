@@ -1,32 +1,62 @@
 const User = require("../database/models/User");
 
-const router = require("express").Router();
-
 const authMiddleware = require("../auth/auth.middlewares");
 
-router.get("/", authMiddleware.checkUser, async function (req, res, next) {
-  if (!req.query) return res.status(400).json({ message: "Invalid Time" });
-  const { year, month, date } = req.query;
-  const hourStart = req.query.h_start;
-  const hourEnd = req.query.h_end;
-  const startTime = new Date(year, month, date, hourStart).getTime();
-  const endTime = new Date(year, month, date, hourEnd).getTime();
-  console.log(startTime);
-  console.log(endTime);
-  const waterListData = req.user.water[`${year}_${month}_${date}`];
+const waterServices = require("./water.services");
 
-  if (!waterListData) return res.status(400).json({ message: "Invalid Time" });
-  let timeKeyResult;
-  for (let key in waterListData) {
-    const timeKey = parseInt(key);
-    console.log(timeKey);
-    if (startTime <= timeKey && timeKey <= endTime) {
-      timeKeyResult = timeKey;
-      break;
-    }
+const router = require("express").Router();
+
+router.use(authMiddleware.checkUser);
+
+router.get("/", function (req, res, next) {
+  if (!req.query) return res.status(400).json({ message: "Invalid Time" });
+
+  const time = waterServices.extractTime(req.query);
+
+  const isValidTime = waterServices.checkValidTime(time);
+
+  if (!isValidTime) return res.status(400).json({ message: "Invalid Time" });
+
+  const type = waterServices.checkTypeOfTimeQuery(time);
+  let data;
+  if (type === "year") {
+    data = waterServices.findWaterDataInAYear(time, req.user);
+  }
+  if (type === "month") {
+    data = waterServices.findWaterDataInAMonth(time, req.user);
+  }
+  if (type === "day") {
+    data = waterServices.findWaterDataInADay(time, req.user);
+  }
+  if (type === "hour") {
+    data = waterServices.findWaterDataInAnHour(time, req.user);
   }
 
-  return res.status(200).json(waterListData[timeKeyResult]);
+  return res.status(200).json({ ...data });
+});
+
+router.get("/bill", function (req, res, next) {
+  if (!req.query) return res.status(400).json({ message: "Invalid Time" });
+
+  const time = waterServices.extractTime(req.query);
+
+  const isValidTime = waterServices.checkValidTime(time);
+  if (!isValidTime) return res.status(400).json({ message: "Invalid Time" });
+
+  const type = waterServices.checkTypeOfTimeQuery(time);
+  let data;
+  if (type === "year") {
+    data = waterServices.findWaterDataInAYear(time, req.user);
+  }
+  if (type === "month") {
+    data = waterServices.findWaterDataInAMonth(time, req.user);
+  }
+  if (type === "day") {
+    data = waterServices.findWaterDataInADay(time, req.user);
+  }
+  return res
+    .status(200)
+    .json({ totalMoney: waterServices.calTotalMoney(data) });
 });
 
 module.exports = router;
