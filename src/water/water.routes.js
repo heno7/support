@@ -50,7 +50,9 @@ router.get("/bill", function (req, res, next) {
     data = waterServices.findWaterDataInAYear(time, req.user);
   }
   if (type === "month") {
+    console.log("Here");
     data = waterServices.findWaterDataInAMonth(time, req.user);
+    console.log(data);
   }
   if (type === "day") {
     data = waterServices.findWaterDataInADay(time, req.user);

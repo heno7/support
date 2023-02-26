@@ -77,15 +77,15 @@ function findWaterDataInAMonth(time, user) {
   let totalHotVolumn = 0;
   let totalHotTemp = 0;
   let count = 0;
-  for (let day = 1; day <= totalDaysInMonth; day++) {
-    const result = findWaterDataInADay({ year, month, day }, user);
+  for (let date = 1; date <= totalDaysInMonth; date++) {
+    const result = findWaterDataInADay({ year, month, date }, user);
     totalColdVolumn += result.cold.volumn;
     totalHotVolumn += result.hot.volumn;
     totalHotTemp += result.hot.temp;
     count++;
   }
 
-  // console.log(count);
+  console.log(count);
 
   return {
     cold: {
