@@ -19,6 +19,7 @@ function findWaterDataInAnHour(time, user) {
 
 function findWaterDataInADay(time, user) {
   const { year, month, date } = time;
+  // console.log(user);
   let waterListData = user.water[`${year}_${month}_${date}`];
   // console.log(waterListData);
 

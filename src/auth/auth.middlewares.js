@@ -33,15 +33,12 @@ module.exports = {
             req.user = user;
             return next();
           }
-        });
-      }
-
-      if (decoded) {
-        User.findById(decoded.id, (error, user) => {
-          if (user) {
-            req.user = user;
-            return next();
-          }
+          User.findById(decoded.id, (error, user) => {
+            if (user) {
+              req.user = user;
+              return next();
+            }
+          });
         });
       }
     });
