@@ -1,4 +1,4 @@
-const User = require("../database/models/User");
+// const User = require("../database/models/User");
 
 const authMiddleware = require("../auth/auth.middlewares");
 
@@ -18,6 +18,7 @@ router.get("/", function (req, res, next) {
   if (!isValidTime) return res.status(400).json({ message: "Invalid Time" });
 
   const type = waterServices.checkTypeOfTimeQuery(time);
+
   let data;
   if (type === "year") {
     data = waterServices.findWaterDataInAYear(time, req.user);

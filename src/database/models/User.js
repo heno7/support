@@ -28,6 +28,11 @@ const userSchema = new Schema({
     default: false,
   },
 
+  apartmentId: {
+    type: String,
+    unique: true,
+  },
+
   deviceId: {
     type: String,
     unique: true,

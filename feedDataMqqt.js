@@ -4,7 +4,7 @@ const client = mqtt.connect("mqtt://test.mosquitto.org");
 client.on("connect", function () {
   client.subscribe("presence", function (err) {
     if (!err) {
-      client.publish("hust/water", "0x1a2c,499,50,123");
+      client.publish("hust/water", "0x2c3a,20,50,123");
     }
   });
 });

@@ -19,9 +19,22 @@ function findWaterDataInAnHour(time, user) {
 
 function findWaterDataInADay(time, user) {
   const { year, month, date } = time;
-  const waterListData = user.water[`${year}_${month}_${date}`];
-  console.log(waterListData);
-  if (!waterListData) return invalidTimeMessage;
+  let waterListData = user.water[`${year}_${month}_${date}`];
+  // console.log(waterListData);
+
+  if (!waterListData) {
+    waterListData = {
+      emptyData: {
+        cold: {
+          volumn: 0,
+        },
+        hot: {
+          volumn: 0,
+          temp: 0,
+        },
+      },
+    };
+  }
   let totalColdVolumn = 0;
   let totalHotVolumn = 0;
   let totalHotTemp = 0;
@@ -33,6 +46,8 @@ function findWaterDataInADay(time, user) {
     totalHotTemp += parseInt(waterListData[key].hot.temp);
     count++;
   }
+
+  // console.log(count);
 
   return {
     cold: {
@@ -54,8 +69,9 @@ function findWaterDataInAMonth(time, user) {
   let totalDaysInMonth = daysInMonth(year, month);
   const now = new Date();
   if (year === now.getFullYear() && month === now.getMonth()) {
-    totalDaysInMonth = now.getDay();
+    totalDaysInMonth = now.getDate();
   }
+
   let totalColdVolumn = 0;
   let totalHotVolumn = 0;
   let totalHotTemp = 0;
@@ -67,6 +83,8 @@ function findWaterDataInAMonth(time, user) {
     totalHotTemp += result.hot.temp;
     count++;
   }
+
+  // console.log(count);
 
   return {
     cold: {

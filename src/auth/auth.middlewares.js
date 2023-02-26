@@ -27,6 +27,15 @@ module.exports = {
         return res.status(403).json({ message: "Unauthorization Access" });
       }
 
+      if (decoded.admin) {
+        User.findById(req.body.userId, (error, user) => {
+          if (user) {
+            req.user = user;
+            return next();
+          }
+        });
+      }
+
       if (decoded) {
         User.findById(decoded.id, (error, user) => {
           if (user) {

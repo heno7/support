@@ -5,6 +5,7 @@ const app = express();
 
 const authRoutes = require("./auth/auth.routes");
 const waterRoutes = require("./water/water.routes");
+const adminRoutes = require("./admin/admin.routes");
 
 const cors = require("cors");
 
@@ -29,6 +30,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 
 app.use("/api/water", waterRoutes);
+
+app.use("/api/admin", adminRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
