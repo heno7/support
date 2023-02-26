@@ -3,7 +3,10 @@ const User = require("../database/models/User");
 
 module.exports = {
   checkAdmin: function (req, res, next) {
-    const token = req.body.token;
+    // const token = req.body.token;
+    // console.log(req.headers);
+    const token = req.headers["authorization"].slice(6).trim();
+
     if (!token) {
       return res.status(401).json({ message: "you do not have permission" });
     }
@@ -16,7 +19,8 @@ module.exports = {
   },
 
   checkUser: function (req, res, next) {
-    const token = req.body.token;
+    // const token = req.body.token;
+    const token = req.headers["authorization"].slice(6).trim();
 
     if (!token) {
       return res.status(401).json({ message: "you do not have permission" });
@@ -28,7 +32,7 @@ module.exports = {
       }
 
       if (decoded.admin) {
-        User.findById(req.body.userId, (error, user) => {
+        User.findById(req.query.userId, (error, user) => {
           if (user) {
             req.user = user;
             return next();
@@ -41,6 +45,12 @@ module.exports = {
           });
         });
       }
+      User.findById(decoded.id, (error, user) => {
+        if (user) {
+          req.user = user;
+          return next();
+        }
+      });
     });
   },
 };

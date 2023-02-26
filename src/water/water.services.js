@@ -14,14 +14,25 @@ function findWaterDataInAnHour(time, user) {
       break;
     }
   }
+  if (!timeKeyResult) {
+    return {
+      cold: {
+        volumn: 0,
+      },
+      hot: {
+        volumn: 0,
+        temp: 0,
+      },
+    };
+  }
   return waterListData[timeKeyResult];
 }
 
 function findWaterDataInADay(time, user) {
   const { year, month, date } = time;
-  // console.log(user);
+  console.log(user);
   let waterListData = user.water[`${year}_${month}_${date}`];
-  // console.log(waterListData);
+  console.log(waterListData);
 
   if (!waterListData) {
     waterListData = {
