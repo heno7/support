@@ -37,20 +37,21 @@ module.exports = {
             req.user = user;
             return next();
           }
-          User.findById(decoded.id, (error, user) => {
-            if (user) {
-              req.user = user;
-              return next();
-            }
-          });
+          // User.findById(decoded.id, (error, user) => {
+          //   if (user) {
+          //     req.user = user;
+          //     return next();
+          //   }
+          // });
+        });
+      } else {
+        User.findById(decoded.id, (error, user) => {
+          if (user) {
+            req.user = user;
+            return next();
+          }
         });
       }
-      User.findById(decoded.id, (error, user) => {
-        if (user) {
-          req.user = user;
-          return next();
-        }
-      });
     });
   },
 };
