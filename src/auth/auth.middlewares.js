@@ -5,7 +5,8 @@ module.exports = {
   checkAdmin: function (req, res, next) {
     // const token = req.body.token;
     // console.log(req.headers);
-    const token = req.headers["authorization"].slice(6).trim();
+    // const token = req.headers["authorization"].slice(6).trim();
+    const token = req.headers["authorization"];
 
     if (!token) {
       return res.status(401).json({ message: "you do not have permission" });
@@ -20,7 +21,8 @@ module.exports = {
 
   checkUser: function (req, res, next) {
     // const token = req.body.token;
-    const token = req.headers["authorization"].slice(6).trim();
+    // const token = req.headers["authorization"].slice(6).trim();
+    const token = req.headers["authorization"];
 
     if (!token) {
       return res.status(401).json({ message: "you do not have permission" });
