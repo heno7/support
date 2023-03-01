@@ -30,9 +30,9 @@ function findWaterDataInAnHour(time, user) {
 
 function findWaterDataInADay(time, user) {
   const { year, month, date } = time;
-  console.log(user);
+  // console.log(user);
   let waterListData = user.water[`${year}_${month}_${date}`];
-  console.log(waterListData);
+  // console.log(waterListData);
 
   if (!waterListData) {
     waterListData = {
@@ -53,9 +53,9 @@ function findWaterDataInADay(time, user) {
   let count = 0;
 
   for (key in waterListData) {
-    totalColdVolumn += parseInt(waterListData[key].cold.volumn);
-    totalHotVolumn += parseInt(waterListData[key].hot.volumn);
-    totalHotTemp += parseInt(waterListData[key].hot.temp);
+    totalColdVolumn += parseFloat(waterListData[key].cold.volumn);
+    totalHotVolumn += parseFloat(waterListData[key].hot.volumn);
+    totalHotTemp += parseFloat(waterListData[key].hot.temp);
     count++;
   }
 
@@ -185,6 +185,7 @@ function checkTypeOfTimeQuery(time) {
 
 function calColdBill(coldWaterUsedData) {
   const coldWaterUsed = coldWaterUsedData.volumn;
+
   if (coldWaterUsed <= 10) {
     return 6500 * coldWaterUsed;
   }
